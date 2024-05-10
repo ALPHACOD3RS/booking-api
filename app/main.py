@@ -1,7 +1,24 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .models import model
+from .database import engine, SessionLocal
+
 from app.core.config import settings
+
+
+app = FastAPI()
+
+model.Base.metadata.create_all(bind=engine)
+
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 def get_application():
